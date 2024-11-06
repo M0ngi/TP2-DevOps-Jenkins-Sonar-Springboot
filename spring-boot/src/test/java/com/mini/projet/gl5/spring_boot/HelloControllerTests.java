@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.mini.projet.gl5.spring_boot.controllers.HelloController;
 
-@WebMvcTest(controllers = { HelloController.class })
+@WebMvcTest(controllers = HelloController.class)
 public class HelloControllerTests {
     @Autowired
     private MockMvc mockMvc;

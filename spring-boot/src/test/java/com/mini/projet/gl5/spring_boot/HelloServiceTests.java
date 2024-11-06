@@ -26,9 +26,4 @@ public class HelloServiceTests {
 
         assertArrayEquals(new String[] { "Hello", "Endpoint" }, resp);
     }
-
-    @Test
-    void sqlInjectionVulnTest() {
-        service.sqlInjectionVuln("name");
-    }
 }

@@ -17,13 +17,4 @@ public class HelloService {
         resp[1] = "Endpoint";
         return resp;
     }
-
-    public void sqlInjectionVuln(String input) {
-        String query = "SELECT * FROM users WHERE name='" + input + "';";
-        executeSqlQuery(query);
-    }
-
-    public void executeSqlQuery(String query) {
-
-    }
 }

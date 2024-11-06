@@ -28,9 +28,14 @@ pipeline {
         stage('Static Code Analysis: Sonarqube') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn -f ./spring-boot/pom.xml sonar:sonar -Dsonar.login=$SONAR_USR -Dsonar.password=$SONAR_PSW'
-                    waitForQualityGate true
+                    sh 'mvn -f ./spring-boot/pom.xml sonar:sonar'
                 }
+            }
+        }
+        
+        stage('Quality Gate Check') {
+            steps {
+                waitForQualityGate abortPipeline: true
             }
         }
         

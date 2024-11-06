@@ -6,6 +6,7 @@ pipeline {
     
     environment {
         DOCKERHUB = credentials('dockerhub')
+        SONAR = credentials('sonarqube')
         IMAGE_NAME = 'm0ngi/tp2-devops'
         CODE_REPOSITORY = 'https://github.com/M0ngi/TP2-DevOps-Jenkins-Sonar-Springboot.git'
     }
@@ -26,7 +27,10 @@ pipeline {
         
         stage('Static Code Analysis: Sonarqube') {
             steps {
-                sh 'mvn -f ./spring-boot/pom.xml clean package'
+                withSonarQubeEnv('sonarqube') {
+                    sh 'mvn -f ./spring-boot/pom.xml sonar:sonar -Dsonar.login=$SONAR_USR -Dsonar.password=$SONAR_PSW'
+                    waitForQualityGate true
+                }
             }
         }
         

@@ -5,16 +5,15 @@ pipeline {
     }
     
     environment {
-        DOCKERHUB = credentials('dockerhub_m0ngi')
-        IMAGE_NAME = 'm0ngi/mini-projet-springboot'
-        MANIFEST_UPDATER_JOB = 'manifest-updater'
-        CODE_REPOSITORY = 'https://github.com/M0ngi/K8S-ArgoCD-Springboot.git'
+        DOCKERHUB = credentials('dockerhub')
+        IMAGE_NAME = 'm0ngi/tp2-devops'
+        CODE_REPOSITORY = 'https://github.com/M0ngi/TP2-DevOps-Jenkins-Sonar-Springboot.git'
     }
     
     stages {
         stage('Clone repository') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: "${CODE_REPOSITORY}"]])
+                checkout scmGit(branches: [[name: 'dev']], extensions: [], userRemoteConfigs: [[url: "${CODE_REPOSITORY}"]])
 
             }
         }
@@ -41,13 +40,6 @@ pipeline {
             steps {
                 sh 'docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW'
                 sh "docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}"
-            }
-        }
-        
-        stage('Trigger ManifestUpdate') {
-            steps {
-                echo "triggering manifest updater"
-                build job: "${MANIFEST_UPDATER_JOB}", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
             }
         }
         

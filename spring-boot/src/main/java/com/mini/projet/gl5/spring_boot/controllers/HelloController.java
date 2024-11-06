@@ -25,11 +25,4 @@ public class HelloController {
     public ResponseEntity<Object> hello() {
         return new ResponseEntity<Object>(service.helloCall(), HttpStatus.OK);
     }
-
-    @GetMapping(path = "/redirect")
-    public RedirectView openRedirect(@RequestParam("url") String url) {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://www.yahoo.com");
-        return redirectView;
-    }
 }

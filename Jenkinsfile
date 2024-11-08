@@ -5,6 +5,8 @@ pipeline {
     }
     
     environment {
+        SNYK_SCAN_JOB = 'Snyk CI'
+
         DOCKERHUB = credentials('dockerhub')
         SONAR = credentials('sonarqube')
         IMAGE_NAME = 'm0ngi/tp2-devops'
@@ -41,14 +43,21 @@ pipeline {
         
         stage('Build docker image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ./spring-boot"
+                sh "docker build -t ${IMAGE_NAME} -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ./spring-boot"
             }
         }
         
         stage('Push image to Dockerhub') {
             steps {
                 sh 'docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW'
-                sh "docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                sh "docker push ${IMAGE_NAME} --all-tags"
+            }
+        }
+
+        stage('Trigger Snyk Scan') {
+            steps {
+                echo "triggering manifest updater"
+                build job: "${SNYK_SCAN_JOB}", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
             }
         }
         

@@ -56,8 +56,11 @@ pipeline {
 
         stage('Trigger Snyk Scan') {
             steps {
-                echo "triggering manifest updater"
-                build job: "${SNYK_SCAN_JOB}", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+                script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        build job: "${SNYK_SCAN_JOB}", parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)], wait: false
+                    }
+                }
             }
         }
         
